@@ -1,0 +1,89 @@
+#!/bin/sh
+#
+# jpgMv file ... - rename jpeg files, name based on original date/time
+#
+# Copyright (C) 2011 Peter Scott - p.scott@shu.ac.uk
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#   Sat Apr 9 19:02:58 BST 2011
+#
+
+
+# usage - display usage message
+#
+usage () {
+  echo "Usage: $NAME [ -t ] file ..." >&2
+  exit 1
+}
+
+
+# checkSimple file - check file is plain, readable, not empty
+#
+checkSimple () {
+  file=$1
+  ls "$file" > /dev/null 2>&1
+  if [ $? -ne 0 ]
+  then echo "$NAME: $file: does not exist" >&2
+       return 1
+  elif [ -d "$file" ]
+  then echo "$NAME: $file: is a directory" >&2
+       return 1
+  elif [ ! -r "$file" ]
+  then echo "$NAME: $file: is not readable" >&2
+       return 1
+  elif [ ! -s "$file" ]
+  then echo "$NAME: $file: is empty" >&2
+       return 1
+  else
+       return 0
+  fi
+}
+
+
+# doit file - do it to one file
+#
+doit () {
+  source=$1
+  file=`basename "$source"`
+  dir=`dirname "$source"`
+  ext=`echo "$file" | sed 's/.*\.//'`
+  date=`jpgDate $timeNeeded "$source"`
+  if [ -z $date ]
+  then echo "$NAME: $source: no date/time" >&2
+  else count=`ls "$dir"/${date}_[0-9][0-9]*."$ext" 2> /dev/null | wc -l`
+       test $count -lt 10 && count=0$count
+       if [ -f "$dir/${date}_$count.$ext" ]
+       then echo "$NAME: $source: $dir/${date}_$count.$ext already exists" >&2
+            exit 2
+       fi
+       mv "$source" "$dir/${date}_$count.$ext"
+  fi
+}
+
+
+NAME=`basename $0`
+while getopts 't' option
+do   case $option in
+         '?')   usage
+                ;;
+          t )   timeNeeded='-t'
+                ;;
+     esac
+done
+shift `expr $OPTIND - 1`
+test "$1" || usage
+for file
+do   checkSimple "$file" && doit "$file"
+done

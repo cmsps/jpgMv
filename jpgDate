@@ -1,0 +1,98 @@
+#!/bin/sh
+#
+# jpgDate file ... - get original date or date+time from JPEG files
+#                     in format: 2005-07-17 or 2005-07-17+14-23-39
+#
+# Copyright (C) 2011 Peter Scott - p.scott@shu.ac.uk
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#   Sun Oct 24 14:42:43 BST 2010
+#
+
+
+# usage - display usage message
+#
+usage () {
+  echo "Usage: $NAME [ -t ] file ..."
+  exit 1
+}
+
+
+# mkTmp - make temp dir and delete it automatically on exit
+#         Eg: ... > $TMP/temp
+#
+mkTmp(){
+  TMP=/tmp/$NAME.$$
+  trap 'rm -r $TMP 2> /dev/null' 0 1 2 3 4 5 6 7 8 9 10    12 13 14 15
+  mkdir $TMP
+}
+
+
+# checkSimple file - check file is plain, readable, not empty
+#
+checkSimple () {
+  file=$1
+  ls "$file" > /dev/null 2>&1
+  if [ $? -ne 0 ]
+  then echo "$NAME: $file: does not exist" >&2
+       return 1
+  elif [ -d "$file" ]
+  then echo "$NAME: $file: is a directory" >&2
+       return 1
+  elif [ ! -r "$file" ]
+  then echo "$NAME: $file: is not readable" >&2
+       return 1
+  elif [ ! -s "$file" ]
+  then echo "$NAME: $file: is empty" >&2
+       return 1
+  else
+       return 0
+  fi
+}
+
+
+# doit file noFiles - do it to one file
+#
+doit () {
+  file=$1
+  noFiles=$2
+  identify -verbose "$file" > $TMP/info
+  date=`sed -n '/ *Date *Time *Original: /{
+                 s/[ A-Za-z:]*: *//
+                 s/\.//
+                 s/ /+/
+                 s/:/-/gp
+            }' $TMP/info`
+  test $timeNeeded || date=`echo $date | sed 's/+.*//'`
+  test $noFiles -ne 1 && printf "$file: "
+  echo $date
+}
+
+
+NAME=`basename $0`
+while getopts ':t' option
+do   case $option in
+         '?')   usage
+                ;;
+          t )   timeNeeded=yes
+                shift
+                ;;
+     esac 
+done
+test "$1" || usage
+mkTmp
+for file
+do   checkSimple "$file" && doit "$file" $#
+done
