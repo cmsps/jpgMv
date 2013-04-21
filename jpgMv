@@ -2,7 +2,9 @@
 #
 # jpgMv file ... - rename jpeg files, name based on original date/time
 #
-# Copyright (C) 2011 Peter Scott - p.scott@shu.ac.uk
+# Thu Apr 18 16:46:25 BST 2013
+#
+# Copyright (C) 2013 Peter Scott - p.scott@shu.ac.uk
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -16,8 +18,6 @@
 #
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#   Sat Apr 9 19:02:58 BST 2011
 #
 
 
@@ -73,6 +73,13 @@ doit () {
 }
 
 
+# prevent the user giving the script a name with spaces in it
+# (This saves quoting $TMP/....)
+#
+case $0 in
+     *' '*) echo "\`$0': I don't allow spaces in command names" >&2
+            exit 2
+esac
 NAME=`basename $0`
 while getopts 't' option
 do   case $option in
