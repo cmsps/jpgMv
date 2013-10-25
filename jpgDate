@@ -3,7 +3,7 @@
 # jpgDate file ... - get original date or date+time from JPEG files
 #                     in format: 2005-07-17 or 2005-07-17+14-23-39
 #
-# Thu Apr 18 16:46:55 BST 2013
+# Sat Aug 10 20:01:08 BST 2013
 #
 # Copyright (C) 2013 Peter Scott - p.scott@shu.ac.uk
 #
@@ -36,7 +36,9 @@ usage () {
 mkTmp(){
   TMP=/tmp/$NAME.$$
   trap 'rm -fr $TMP 2> /dev/null' 0 1 2 3 4 5 6 7 8 9 10    12 13 14 15
-  mkdir $TMP
+  mkdir $TMP && return
+  echo " $NAME: couldn't make $TMP directory"  >&2
+  exit 2
 }
 
 
@@ -82,11 +84,11 @@ doit () {
 
 
 # prevent the user giving the script a name with spaces in it
-# (This saves quoting $TMP/....)
+# -- saving the hassle of quoting internal file names
 #
 case $0 in
      *' '*) echo "\`$0': I don't allow spaces in command names" >&2
-            exit 2
+            exit 3
 esac
 NAME=`basename $0`
 while getopts ':t' option
