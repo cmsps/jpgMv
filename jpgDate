@@ -3,9 +3,9 @@
 # jpgDate file ... - get original date or date+time from JPEG files
 #                     in format: 2005-07-17 or 2005-07-17+14-23-39
 #
-# Sat Aug 10 20:01:08 BST 2013
+# Mon Apr 21 14:55:29 BST 2014
 #
-# Copyright (C) 2013 Peter Scott - p.scott@shu.ac.uk
+# Copyright (C) 2014 Peter Scott - p.scott@shu.ac.uk
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -70,7 +70,7 @@ checkSimple () {
 doit () {
   file=$1
   noFiles=$2
-  identify -verbose "$file" > $TMP/info
+  identify -verbose -ping "$file" > $TMP/info
   date=`sed -n '/ *Date *Time *Original: /{
                  s/[ A-Za-z:]*: *//
                  s/\.//
@@ -83,14 +83,16 @@ doit () {
 }
 
 
-# prevent the user giving the script a name with spaces in it
+# prevent the user giving the script a name with white space in it
 # -- saving the hassle of quoting internal file names
 #
-case $0 in
-     *' '*) echo "\`$0': I don't allow spaces in command names" >&2
-            exit 3
-esac
-NAME=`basename $0`
+NAME=`basename "$0"`
+words=`echo "$NAME" | wc -w`
+if [ $words -ne 1 ]
+then echo "\`$0': I don't allow white space in command names" >&2
+     exit 3
+fi
+
 while getopts ':t' option
 do   case $option in
          '?')   usage
