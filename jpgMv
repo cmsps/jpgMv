@@ -2,9 +2,9 @@
 #
 # jpgMv file ... - rename jpeg files, name based on original date/time
 #
-# Tue Oct 29 15:53:19 GMT 2013
+# Sun Oct 19 19:46:34 BST 2014
 #
-# Copyright (C) 2014 Peter Scott - p.scott@shu.ac.uk
+# Copyright (C) 2015 Peter Scott - p.scott@shu.ac.uk
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -79,7 +79,7 @@ doit () {
 NAME=`basename "$0"`
 words=`echo "$NAME" | wc -w`
 if [ $words -ne 1 ]
-then echo "\`$0': I don't allow white space in command names" >&2
+then echo "\`$NAME': I don't allow white space in command names" >&2
      exit 3
 fi
 

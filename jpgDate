@@ -3,9 +3,9 @@
 # jpgDate file ... - get original date or date+time from JPEG files
 #                     in format: 2005-07-17 or 2005-07-17+14-23-39
 #
-# Mon Apr 21 14:55:29 BST 2014
+# Sun Oct 19 19:47:16 BST 2014
 #
-# Copyright (C) 2014 Peter Scott - p.scott@shu.ac.uk
+# Copyright (C) 2015 Peter Scott - p.scott@shu.ac.uk
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -89,7 +89,7 @@ doit () {
 NAME=`basename "$0"`
 words=`echo "$NAME" | wc -w`
 if [ $words -ne 1 ]
-then echo "\`$0': I don't allow white space in command names" >&2
+then echo "\`$NAME': I don't allow white space in command names" >&2
      exit 3
 fi
 
