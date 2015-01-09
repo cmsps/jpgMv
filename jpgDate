@@ -3,7 +3,7 @@
 # jpgDate file ... - get original date or date+time from JPEG files
 #                     in format: 2005-07-17 or 2005-07-17+14-23-39
 #
-# Sun Oct 19 19:47:16 BST 2014
+# Fri Jan 9 17:12:56 GMT 2015
 #
 # Copyright (C) 2015 Peter Scott - p.scott@shu.ac.uk
 #
@@ -27,18 +27,6 @@
 usage () {
   echo "Usage: $NAME [ -t ] file ..."
   exit 1
-}
-
-
-# mkTmp - make temp dir and delete it automatically on exit
-#         Eg: ... > $TMP/temp
-#
-mkTmp(){
-  TMP=/tmp/$NAME.$$
-  trap 'rm -fr $TMP 2> /dev/null' 0 1 2 3 4 5 6 7 8 9 10    12 13 14 15
-  mkdir $TMP && return
-  echo " $NAME: couldn't make $TMP directory"  >&2
-  exit 2
 }
 
 
@@ -70,16 +58,16 @@ checkSimple () {
 doit () {
   file=$1
   noFiles=$2
-  identify -verbose -ping "$file" > $TMP/info
-  date=`sed -n '/ *Date *Time *Original: /{
-                 s/[ A-Za-z:]*: *//
-                 s/\.//
-                 s/ /+/
-                 s/:/-/gp
-            }' $TMP/info`
-  test $timeNeeded || date=`echo $date | sed 's/+.*//'`
+  set `exiftool -DateTimeOriginal "$file" |
+         sed -n '/ *Date.Time *Original *: /{
+                     s/[ A-Za-z:/]*: *//
+                     s/:/-/gp
+                 }'`
+  date=$1; time=$2
   test $noFiles -ne 1 && printf "$file: "
-  echo $date
+  printf $date
+  test $timeNeeded && printf '+%s' $time
+  echo
 }
 
 
@@ -95,15 +83,13 @@ fi
 
 while getopts ':t' option
 do   case $option in
-         '?')   usage
-                ;;
-          t )   timeNeeded=yes
-                shift
-                ;;
+       '?') usage
+            ;;
+        t ) timeNeeded=yes
+            shift
      esac 
 done
 test "$1" || usage
-mkTmp
 for file
 do   checkSimple "$file" && doit "$file" $#
 done
