@@ -2,7 +2,7 @@
 #
 # jpgMv file ... - rename jpeg files, name based on original date/time
 #
-# Sun Oct 19 19:46:34 BST 2014
+# Fri Jan 9 19:28:53 GMT 2015
 #
 # Copyright (C) 2015 Peter Scott - p.scott@shu.ac.uk
 #
@@ -85,10 +85,8 @@ fi
 
 while getopts 't' option
 do   case $option in
-         '?')   usage
-                ;;
-          t )   timeNeeded='-t'
-                ;;
+       '?')   usage ;;
+        t )   timeNeeded='-t' ;;
      esac
 done
 shift `expr $OPTIND - 1`

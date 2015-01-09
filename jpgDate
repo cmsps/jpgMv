@@ -3,7 +3,7 @@
 # jpgDate file ... - get original date or date+time from JPEG files
 #                     in format: 2005-07-17 or 2005-07-17+14-23-39
 #
-# Fri Jan 9 17:12:56 GMT 2015
+# Fri Jan 9 19:30:03 GMT 2015
 #
 # Copyright (C) 2015 Peter Scott - p.scott@shu.ac.uk
 #
@@ -83,12 +83,11 @@ fi
 
 while getopts ':t' option
 do   case $option in
-       '?') usage
-            ;;
-        t ) timeNeeded=yes
-            shift
+       '?') usage ;;
+        t ) timeNeeded=yes ;;
      esac 
 done
+shift `expr $OPTIND - 1`
 test "$1" || usage
 for file
 do   checkSimple "$file" && doit "$file" $#
