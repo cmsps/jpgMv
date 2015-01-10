@@ -3,7 +3,7 @@
 # jpgDate file ... - get original date or date+time from JPEG files
 #                     in format: 2005-07-17 or 2005-07-17+14-23-39
 #
-# Fri Jan 9 19:30:03 GMT 2015
+# Sat Jan 10 17:35:16 GMT 2015
 #
 # Copyright (C) 2015 Peter Scott - p.scott@shu.ac.uk
 #
@@ -62,11 +62,13 @@ doit () {
          sed -n '/ *Date.Time *Original *: /{
                      s/[ A-Za-z:/]*: *//
                      s/:/-/gp
-                 }'`
-  date=$1; time=$2
-  test $noFiles -ne 1 && printf "$file: "
-  printf $date
-  test $timeNeeded && printf '+%s' $time
+                 }'` dummy
+  test $noFiles -ne 1 && printf "$file:"
+  if [ $1 != dummy ]
+  then date=$1; time=$2
+       printf " %s" $date
+       test $timeNeeded && printf '+%s' $time
+  fi
   echo
 }
 
