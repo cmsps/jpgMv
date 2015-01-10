@@ -2,7 +2,7 @@
 #
 # jpgMv file ... - rename jpeg files, name based on original date/time
 #
-# Fri Jan 9 19:28:53 GMT 2015
+# Sat Jan 10 17:13:03 GMT 2015
 #
 # Copyright (C) 2015 Peter Scott - p.scott@shu.ac.uk
 #
@@ -52,6 +52,28 @@ checkSimple () {
 }
 
 
+# nextFreeNo dir date ext - get next free underscore number
+#
+nextFreeNo(){
+  dir=$1; date=$2; ext=$3
+  test -f "$dir/$date.$ext" || return
+  ( cd "$dir"
+    { ls ${date}_*."$ext" 2> /dev/null |
+        sed 's/\.'"$ext"'//
+             s/.*_//' |
+          sort -n
+      echo 999
+    } |
+    nl -n rz -s ' ' -w 2 -v 0 |
+      sed -n '/^\([0-9][0-9]*\) \1$/d
+              /./{ s/ .*//
+                   p
+                   q
+              }'
+  )
+}
+
+
 # doit file - do it to one file
 #
 doit () {
@@ -62,13 +84,20 @@ doit () {
   date=`jpgDate $timeNeeded "$source"`
   if [ -z $date ]
   then echo "$NAME: $source: no date/time" >&2
-  else count=`ls "$dir"/${date}_[0-9][0-9]*."$ext" 2> /dev/null | wc -l`
-       test $count -lt 10 && count=0$count
-       if [ -f "$dir/${date}_$count.$ext" ]
-       then echo "$NAME: $source: $dir/${date}_$count.$ext already exists" >&2
-            exit 2
+  else count=`nextFreeNo "$dir" "$date" "$ext"`
+        case $count in
+          '')
+             : ;;
+          [0-9][0-9])
+             count=_$count ;;
+          *) echo "$NAME: $source: would overflow ${date}_99" >&2
+             exit 3
+        esac
+       if [ -f "$dir/$date$count.$ext" ]
+       then echo "$NAME: $source: $dir/$date$count.$ext already exists" >&2
+            exit 4   # should never happen
        fi
-       mv "$source" "$dir/${date}_$count.$ext"
+       mv "$source" "$dir/${date}$count.$ext"
   fi
 }
 
@@ -80,7 +109,7 @@ NAME=`basename "$0"`
 words=`echo "$NAME" | wc -w`
 if [ $words -ne 1 ]
 then echo "\`$NAME': I don't allow white space in command names" >&2
-     exit 3
+     exit 5
 fi
 
 while getopts 't' option
