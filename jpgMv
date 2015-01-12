@@ -2,7 +2,7 @@
 #
 # jpgMv file ... - rename jpeg files, name based on original date/time
 #
-# Sun Jan 11 23:03:38 GMT 2015
+# Mon Jan 12 13:03:36 GMT 2015
 #
 # Copyright (C) 2015 Peter Scott - p.scott@shu.ac.uk
 #
@@ -49,15 +49,6 @@ checkSimple () {
   else
        return 0
   fi
-}
-
-
-# badOpt option - report bad option
-#
-badOpt(){
-  option=$1
-    echo "$NAME: bad option -- $option" >&2
- usage
 }
 
 
@@ -125,8 +116,9 @@ fi
 
 while getopts ':t' option
 do   case $option in
-       '?')   badOpt "$OPTARG" ;;
-        t )   timeNeeded='-t' ;;
+       t) timeNeeded='-t' ;;
+      \?) echo "$NAME: bad option -- $OPTARG" >&2
+          usage
      esac
 done
 shift `expr $OPTIND - 1`

@@ -3,7 +3,7 @@
 # jpgDate file ... - get original date or date+time from JPEG files
 #                     in format: 2005-07-17 or 2005-07-17+14-23-39
 #
-# Sun Jan 11 23:08:25 GMT 2015
+# Mon Jan 12 13:05:44 GMT 2015
 #
 # Copyright (C) 2015 Peter Scott - p.scott@shu.ac.uk
 #
@@ -53,15 +53,6 @@ checkSimple () {
 }
 
 
-# badOpt option - report bad option
-#
-badOpt(){
-  option=$1
-    echo "$NAME: bad option -- $option" >&2
- usage
-}
-
-
 # doit file noFiles - do it to one file
 #
 doit () {
@@ -95,8 +86,9 @@ fi
 
 while getopts ':t' option
 do   case $option in
-       '?') badOpt $OPTARG ;;
-        t ) timeNeeded=yes ;;
+       t) timeNeeded='-t' ;;
+      \?) echo "$NAME: bad option -- $OPTARG" >&2
+          usage
      esac 
 done
 shift `expr $OPTIND - 1`
