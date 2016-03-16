@@ -3,9 +3,9 @@
 # jpgDate file ... - get original date or date+time from JPEG files
 #                     in format: 2005-07-17 or 2005-07-17+14-23-39
 #
-# Mon Jan 12 13:05:44 GMT 2015
+# Tue Nov 10 22:31:18 GMT 2015
 #
-# Copyright (C) 2015 Peter Scott - p.scott@shu.ac.uk
+# Copyright (C) 2016 Peter Scott - p.scott@shu.ac.uk
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -19,6 +19,11 @@
 #
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+# Other programme needed: exiftool
+#
+# (On Fedora and Centos the rpm is called: perl-Image-ExifTool)
 #
 
 
