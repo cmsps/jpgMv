@@ -2,9 +2,9 @@
 #
 # jpgMv file ... - rename jpeg files, name based on original date/time
 #
-# Mon Jan 12 13:03:36 GMT 2015
+# Sun Mar 17 19:22:06 GMT 2024
 #
-# Copyright (C) 2024 Peter Scott - peterscott@pobox.com
+# Copyright (C) 2025 Peter Scott - peterscott@pobox.com
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -114,9 +114,10 @@ then echo "\`$NAME': I don't allow white space in command names" >&2
      exit 5
 fi
 
-while getopts ':t' option
+while getopts ':th' option
 do   case $option in
        t) timeNeeded='-t' ;;
+       h) usage ;;
       \?) echo "$NAME: bad option -- $OPTARG" >&2
           usage
      esac

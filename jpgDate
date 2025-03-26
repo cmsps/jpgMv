@@ -3,9 +3,9 @@
 # jpgDate file ... - get original date or date+time from JPEG files
 #                     in format: 2005-07-17 or 2005-07-17+14-23-39
 #
-# Tue Nov 10 22:31:18 GMT 2015
+# Sun Mar 17 19:21:04 GMT 2024
 #
-# Copyright (C) 2024 Peter Scott - peterscott@pobox.com
+# Copyright (C) 2025 Peter Scott - peterscott@pobox.com
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -89,9 +89,10 @@ then echo "\`$NAME': I don't allow white space in command names" >&2
      exit 3
 fi
 
-while getopts ':t' option
+while getopts ':th' option
 do   case $option in
        t) timeNeeded='-t' ;;
+       h) usage ;;
       \?) echo "$NAME: bad option -- $OPTARG" >&2
           usage
      esac 
